@@ -1,0 +1,47 @@
+[
+  {
+    "topico": "phishing",
+    "palavras_chave": ["phishing", "email falso", "link suspeito", "golpe", "credenciais"],
+    "resposta": "Phishing e um ataque de engenharia social que tenta enganar a pessoa para clicar em links falsos, abrir anexos perigosos ou informar dados sigilosos. Verifique remetente, endereco do link, erros de escrita e urgencia exagerada antes de agir."
+  },
+  {
+    "topico": "senha forte",
+    "palavras_chave": ["senha", "senhas", "senha forte", "password"],
+    "resposta": "Uma senha forte deve ser longa, unica para cada servico e dificil de adivinhar. Prefira frases-senha, use gerenciador de senhas e nunca compartilhe senhas por telefone, mensagem ou email."
+  },
+  {
+    "topico": "mfa",
+    "palavras_chave": ["mfa", "2fa", "autenticacao", "multifator", "duplo fator"],
+    "resposta": "MFA adiciona uma camada extra de protecao alem da senha. Mesmo que a senha seja vazada, o invasor ainda precisa de outro fator, como aplicativo autenticador, token ou biometria."
+  },
+  {
+    "topico": "engenharia social",
+    "palavras_chave": ["engenharia social", "manipulacao", "baiting", "scareware", "pretexting"],
+    "resposta": "Engenharia social usa manipulacao psicologica para induzir pessoas a revelar dados, executar acoes inseguras ou confiar em identidades falsas. Desconfie de pressa, medo, recompensa facil e pedidos incomuns."
+  },
+  {
+    "topico": "osint",
+    "palavras_chave": ["osint", "fontes abertas", "google hacking", "metadados", "shodan"],
+    "resposta": "OSINT e a coleta e analise de informacoes em fontes abertas. Pode incluir buscas avancadas, analise de metadados e consulta a servicos publicos. Deve ser usado de forma etica e legal."
+  },
+  {
+    "topico": "metadados",
+    "palavras_chave": ["metadados", "metadata", "dados do arquivo", "foca"],
+    "resposta": "Metadados sao dados sobre outros dados ou arquivos. Um documento pode conter autor, data de criacao, software usado e outras informacoes. Antes de publicar arquivos, revise e remova metadados sensiveis."
+  },
+  {
+    "topico": "devsecops",
+    "palavras_chave": ["devsecops", "devops", "seguranca no desenvolvimento", "pipeline"],
+    "resposta": "DevSecOps incorpora seguranca desde o inicio do desenvolvimento. A ideia e integrar seguranca, automacao, testes e conformidade em todo o ciclo do software, reduzindo o tempo para corrigir falhas."
+  },
+  {
+    "topico": "sistema operacional",
+    "palavras_chave": ["sistema operacional", "kernel", "shell", "windows", "linux"],
+    "resposta": "Sistema operacional faz a interface entre usuario, aplicacoes e hardware. O kernel e seu componente central, responsavel por memoria, processos, chamadas do sistema e entrada/saida. O shell permite interacao por comandos."
+  },
+  {
+    "topico": "boas praticas",
+    "palavras_chave": ["boas praticas", "seguranca", "proteger", "cuidados", "privilegio minimo"],
+    "resposta": "Boas praticas incluem usar MFA, senhas fortes, atualizacoes, antivirus, principio do privilegio minimo, cuidado com links e controle de acesso fisico. Seguranca depende de tecnologia e comportamento."
+  }
+]
