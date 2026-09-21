@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GuiaCiber - Assistente Virtual</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b0d10;
+      --panel: #151922;
+      --line: #283141;
+      --text: #eef2f7;
+      --muted: #aab4c2;
+      --accent: #41d1a7;
+      --warn: #ffd166;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    main {
+      width: min(920px, 100%);
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    header { padding: 24px; border-bottom: 1px solid var(--line); }
+    h1 { margin: 0 0 8px; font-size: 28px; line-height: 1.15; }
+    p { margin: 0; color: var(--muted); line-height: 1.5; }
+
+    .chat {
+      min-height: 360px;
+      max-height: 520px;
+      overflow: auto;
+      padding: 20px;
+      display: grid;
+      gap: 14px;
+      align-content: start;
+    }
+
+    .message {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+    }
+
+    .user { background: #101722; }
+    .bot { background: #101d1a; }
+
+    .role {
+      display: block;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      padding: 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #0f131a;
+      color: var(--text);
+      padding: 14px;
+      font-size: 16px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #06110d;
+      font-weight: 700;
+      padding: 0 22px;
+      cursor: pointer;
+    }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 20px 20px; }
+    .chip { border: 1px solid var(--line); background: transparent; color: var(--muted); border-radius: 999px; padding: 8px 10px; font-size: 13px; }
+    .warning { color: var(--warn); }
+
+    @media (max-width: 640px) {
+      body { padding: 12px; }
+      form { grid-template-columns: 1fr; }
+      button { min-height: 44px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>GuiaCiber</h1>
+      <p>Assistente virtual educacional para duvidas basicas de ciberseguranca.</p>
+    </header>
+
+    <section id="chat" class="chat" aria-live="polite"></section>
+
+    <div class="chips">
+      <button class="chip" type="button">O que e phishing?</button>
+      <button class="chip" type="button">Por que usar MFA?</button>
+      <button class="chip" type="button">O que e DevSecOps?</button>
+      <button class="chip" type="button">O que sao metadados?</button>
+    </div>
+
+    <form id="form">
+      <input id="question" autocomplete="off" placeholder="Digite sua pergunta" aria-label="Digite sua pergunta">
+      <button type="submit">Enviar</button>
+    </form>
+  </main>
+
+  <script>
+    const knowledgeBase = [
+      { topic: "phishing", keywords: ["phishing", "email falso", "link suspeito", "golpe", "credenciais"], answer: "Phishing e um ataque de engenharia social que tenta enganar a pessoa para clicar em links falsos, abrir anexos perigosos ou informar dados sigilosos. Verifique remetente, endereco do link, erros de escrita e urgencia exagerada antes de agir." },
+      { topic: "senha forte", keywords: ["senha", "senhas", "senha forte", "password"], answer: "Uma senha forte deve ser longa, unica para cada servico e dificil de adivinhar. Prefira frases-senha, use gerenciador de senhas e nunca compartilhe senhas por telefone, mensagem ou email." },
+      { topic: "mfa", keywords: ["mfa", "2fa", "autenticacao", "multifator", "duplo fator"], answer: "MFA adiciona uma camada extra de protecao alem da senha. Mesmo que a senha seja vazada, o invasor ainda precisa de outro fator, como aplicativo autenticador, token ou biometria." },
+      { topic: "engenharia social", keywords: ["engenharia social", "manipulacao", "baiting", "scareware", "pretexting"], answer: "Engenharia social usa manipulacao psicologica para induzir pessoas a revelar dados, executar acoes inseguras ou confiar em identidades falsas. Desconfie de pressa, medo, recompensa facil e pedidos incomuns." },
+      { topic: "osint", keywords: ["osint", "fontes abertas", "google hacking", "metadados", "shodan"], answer: "OSINT e a coleta e analise de informacoes em fontes abertas. Pode incluir buscas avancadas, analise de metadados e consulta a servicos publicos. Deve ser usado de forma etica e legal." },
+      { topic: "metadados", keywords: ["metadados", "metadata", "dados do arquivo", "foca"], answer: "Metadados sao dados sobre outros dados ou arquivos. Um documento pode conter autor, data de criacao, software usado e outras informacoes. Antes de publicar arquivos, revise e remova metadados sensiveis." },
+      { topic: "devsecops", keywords: ["devsecops", "devops", "seguranca no desenvolvimento", "pipeline"], answer: "DevSecOps incorpora seguranca desde o inicio do desenvolvimento. A ideia e integrar seguranca, automacao, testes e conformidade em todo o ciclo do software, reduzindo o tempo para corrigir falhas." },
+      { topic: "sistema operacional", keywords: ["sistema operacional", "kernel", "shell", "windows", "linux"], answer: "Sistema operacional faz a interface entre usuario, aplicacoes e hardware. O kernel e seu componente central, responsavel por memoria, processos, chamadas do sistema e entrada/saida. O shell permite interacao por comandos." },
+      { topic: "boas praticas", keywords: ["boas praticas", "seguranca", "proteger", "cuidados", "privilegio minimo"], answer: "Boas praticas incluem usar MFA, senhas fortes, atualizacoes, antivirus, principio do privilegio minimo, cuidado com links e controle de acesso fisico. Seguranca depende de tecnologia e comportamento." }
+    ];
+
+    const unsafeTerms = ["invadir", "roubar", "quebrar senha", "hackear conta", "pegar senha", "derrubar site"];
+    const chat = document.querySelector("#chat");
+    const form = document.querySelector("#form");
+    const input = document.querySelector("#question");
+
+    function normalize(text) {
+      return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
+    }
+
+    function addMessage(role, text, className) {
+      const message = document.createElement("div");
+      message.className = `message ${className}`;
+      message.innerHTML = `<span class="role">${role}</span>${text}`;
+      chat.appendChild(message);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function score(question, item) {
+      const normalizedQuestion = normalize(question);
+      let points = 0;
+      item.keywords.forEach((keyword) => {
+        if (normalizedQuestion.includes(normalize(keyword))) points += 3;
+      });
+      normalize(question).split(" ").forEach((term) => {
+        if (normalize(item.topic).includes(term)) points += 1;
+      });
+      return points;
+    }
+
+    function answer(question) {
+      const normalizedQuestion = normalize(question);
+      if (unsafeTerms.some((term) => normalizedQuestion.includes(normalize(term)))) {
+        return "<span class='warning'>Nao posso ajudar com invasao, roubo de dados ou abuso de sistemas.</span> Posso ajudar com boas praticas defensivas, como MFA, senhas fortes e identificacao de phishing.";
+      }
+
+      const best = knowledgeBase.map((item) => ({ item, points: score(question, item) })).sort((a, b) => b.points - a.points)[0];
+
+      if (!best || best.points === 0) {
+        return "Nao encontrei informacao suficiente na minha base para responder com seguranca. Tente perguntar sobre phishing, senhas, MFA, engenharia social, OSINT, metadados, DevSecOps ou sistemas operacionais.";
+      }
+
+      return `${best.item.answer}<br><br><strong>Proximo passo:</strong> aplique essa orientacao em uma situacao simples do seu dia a dia.`;
+    }
+
+    function submitQuestion(question) {
+      const cleanQuestion = question.trim();
+      if (!cleanQuestion) return;
+      addMessage("Voce", cleanQuestion, "user");
+      addMessage("GuiaCiber", answer(cleanQuestion), "bot");
+      input.value = "";
+      input.focus();
+    }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      submitQuestion(input.value);
+    });
+
+    document.querySelectorAll(".chip").forEach((chip) => {
+      chip.addEventListener("click", () => submitQuestion(chip.textContent));
+    });
+
+    addMessage("GuiaCiber", "Ola. Pergunte sobre phishing, senhas, MFA, engenharia social, OSINT, metadados, DevSecOps ou sistemas operacionais.", "bot");
+  </script>
+</body>
+</html>
